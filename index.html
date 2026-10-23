@@ -181,7 +181,7 @@ button{cursor:pointer}
   <div class="home-head">
     <div>
       <h1>Lab Kata</h1>
-      <p>Latihan pengolah kata di HP dengan tampilan seperti di komputer. Ini simulator untuk melatih letak menu dan alur kerja, bukan aplikasi Word asli. Setelah dibuka sekali, lab bisa dipakai tanpa internet.</p>
+      <p>Latihan pengolah kata di HP dengan tampilan seperti di komputer. Antarmuka meniru Microsoft Word berbahasa Inggris, isi dan tugas dalam Bahasa Indonesia. Setelah dibuka sekali, lab bisa dipakai tanpa internet.</p>
     </div>
     <div class="ident">
       <label>Nama siswa<input id="inNama" autocomplete="off" placeholder="Nama lengkap"></label>
@@ -199,12 +199,12 @@ button{cursor:pointer}
 <section id="lab" class="screen" hidden>
   <div class="titlebar">
     <div class="qa">
-      <button data-ui="simpan" aria-label="Simpan" title="Simpan"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 3h12l3 3v15H5z"/><path d="M8 3v6h8V3M8 21v-7h8v7"/></svg></button>
-      <button data-ui="batal" aria-label="Batalkan" title="Batalkan"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 7 4 12l5 5M4 12h11a5 5 0 0 1 0 10h-3"/></svg></button>
-      <button data-ui="ulangi" aria-label="Ulangi" title="Ulangi"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m15 7 5 5-5 5M20 12H9a5 5 0 0 0 0 10h3"/></svg></button>
+      <button data-ui="simpan" aria-label="Save" title="Save"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 3h12l3 3v15H5z"/><path d="M8 3v6h8V3M8 21v-7h8v7"/></svg></button>
+      <button data-ui="undo" aria-label="Undo" title="Undo"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 7 4 12l5 5M4 12h11a5 5 0 0 1 0 10h-3"/></svg></button>
+      <button data-ui="redo" aria-label="Redo" title="Redo"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m15 7 5 5-5 5M20 12H9a5 5 0 0 0 0 10h3"/></svg></button>
     </div>
     <div class="tabs" id="tabs" role="tablist"></div>
-    <div class="doc" id="docName">Dokumen1 - Lab Kata</div>
+    <div class="doc" id="docName">Document1 - Lab Kata</div>
     <button class="tbtn" id="btnHome">Keluar</button>
   </div>
   <div class="ribbon" id="ribbon"></div>
@@ -213,23 +213,23 @@ button{cursor:pointer}
     <div class="canvas" id="canvas">
       <div class="sheetwrap" id="sheetwrap">
         <div class="paper" id="paper">
-          <div class="hfwrap" id="hdrWrap"><div class="hf" id="hdr" contenteditable="true" data-ph="Ketik teks header" data-ui="header"></div></div>
+          <div class="hfwrap" id="hdrWrap"><div class="hf" id="hdr" contenteditable="true" data-ph="Type header text" data-ui="header"></div></div>
           <div class="body" id="body" contenteditable="true" spellcheck="false"></div>
-          <div class="hfwrap" id="ftrWrap"><div class="hf" id="ftr" contenteditable="true" data-ph="Ketik teks footer" data-ui="footer"></div></div>
+          <div class="hfwrap" id="ftrWrap"><div class="hf" id="ftr" contenteditable="true" data-ph="Type footer text" data-ui="footer"></div></div>
         </div>
       </div>
     </div>
     <aside class="task" id="task" aria-live="polite"></aside>
   </div>
   <div class="status" id="status">
-    <span data-ui="halaman">Halaman 1 dari 1</span>
-    <span data-ui="katakata" id="wc">Jumlah kata: 0</span>
-    <span>Bahasa Indonesia</span>
+    <span data-ui="halaman">Page 1 of 1</span>
+    <span data-ui="katakata" id="wc">Words: 0</span>
+    <span>Indonesian</span>
     <span class="sp"></span>
     <label><input type="checkbox" id="touchSel" checked> Ketuk = blok paragraf</label>
-    <button data-ui="zoomout" aria-label="Perkecil">−</button>
+    <button data-ui="zoomout" aria-label="Zoom Out">−</button>
     <input type="range" id="zoomR" min="40" max="200" value="100" data-ui="zoomslider" aria-label="Zoom">
-    <button data-ui="zoomin" aria-label="Perbesar">+</button>
+    <button data-ui="zoomin" aria-label="Zoom In">+</button>
     <span id="zoomV" data-ui="zoomval">100%</span>
   </div>
 </section>
@@ -249,7 +249,7 @@ const SALT='labkata-v1-2026';
 function hash(str){let h1=0xdeadbeef,h2=0x41c6ce57;for(let i=0;i<str.length;i++){const c=str.charCodeAt(i);h1=Math.imul(h1^c,2654435761);h2=Math.imul(h2^c,1597334677);}
  h1=Math.imul(h1^(h1>>>16),2246822507)^Math.imul(h2^(h2>>>13),3266489909);h2=Math.imul(h2^(h2>>>16),2246822507)^Math.imul(h1^(h1>>>13),3266489909);
  return (4294967296*(2097151&h2)+(h1>>>0)).toString(36);}
-const KEY='labkata.v1';
+const KEY='labkata.v2';
 let S={student:{nama:'',kelas:''},prog:{},sessions:{}};
 try{const r=localStorage.getItem(KEY);if(r){const o=JSON.parse(r);if(o){if(o.prog)S.prog=o.prog;if(o.student)S.student=o.student;if(o.sessions)S.sessions=o.sessions;}}}catch(e){}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
@@ -337,53 +337,53 @@ function setZoom(v){Z=Math.max(40,Math.min(200,Math.round(v)));applyPage();}
 const FONTS=['Calibri','Arial','Times New Roman','Courier New','Georgia','Verdana'];
 const SIZE_LIST=[8,10,11,12,14,16,18,20,24,28,36];
 const TABS=[
- {id:'beranda',label:'Beranda',groups:[
-  {l:'Clipboard',it:[{t:'btn',big:1,ui:'tempel',ic:'paste',l:'Tempel',a:()=>info('Tempel: tempel teks yang sudah disalin.')},{t:'btn',ui:'potong',ic:'cut',title:'Potong',a:()=>cmd('cut')},{t:'btn',ui:'salin',ic:'copy',title:'Salin',a:()=>cmd('copy')}]},
+ {id:'beranda',label:'Home',groups:[
+  {l:'Clipboard',it:[{t:'btn',big:1,ui:'tempel',ic:'paste',l:'Paste',a:()=>info('Paste: tempel teks yang sudah disalin.')},{t:'btn',ui:'potong',ic:'cut',title:'Cut',a:()=>cmd('cut')},{t:'btn',ui:'salin',ic:'copy',title:'Copy',a:()=>cmd('copy')}]},
   {l:'Font',it:[{t:'sel',ui:'fontname',id:'fFont',cls:'fnt',opts:FONTS.map(f=>[f,f]),a:v=>setFont(v)},{t:'sel',ui:'fontsize',id:'fSize',cls:'sz',opts:SIZE_LIST.map(s=>[s,s]),val:11,a:v=>setSize(+v)},
-   {t:'btn',ui:'bold',id:'bBold',cls:'b',l:'B',title:'Tebal (Bold)',a:()=>cmd('bold')},{t:'btn',ui:'italic',id:'bItal',cls:'i',l:'I',title:'Miring (Italic)',a:()=>cmd('italic')},{t:'btn',ui:'underline',id:'bUnd',cls:'u',l:'U',title:'Garis bawah (Underline)',a:()=>cmd('underline')},
-   {t:'sel',ui:'fontcolor',id:'fColor',cls:'',opts:[['#111111','A Hitam'],['#c00000','A Merah'],['#0050c8','A Biru'],['#1f7a3d','A Hijau']],a:v=>cmd('foreColor',v)},
-   {t:'btn',ui:'hl',ic:'hl',title:'Sorot teks (kuning)',a:()=>cmd('hiliteColor','#ffff00')}]},
-  {l:'Paragraf',it:[{t:'btn',ui:'bullet',ic:'ul',title:'Butir (bullet)',a:()=>cmd('insertUnorderedList')},{t:'btn',ui:'number',ic:'ol',title:'Penomoran',a:()=>cmd('insertOrderedList')},{t:'btn',ui:'indm',ic:'indm',title:'Kurangi indentasi',a:()=>indent(-1)},{t:'btn',ui:'indp',ic:'indp',title:'Tambah indentasi',a:()=>indent(1)},
-   {t:'btn',ui:'alL',ic:'left',title:'Rata kiri',a:()=>align('left')},{t:'btn',ui:'alC',ic:'center',title:'Rata tengah (Center)',a:()=>align('center')},{t:'btn',ui:'alR',ic:'right',title:'Rata kanan',a:()=>align('right')},{t:'btn',ui:'alJ',ic:'justify',title:'Rata kiri-kanan (Justify)',a:()=>align('justify')},
-   {t:'sel',ui:'spasi',id:'fSpace',cls:'sz',opts:[['1','1,0'],['1.15','1,15'],['1.5','1,5'],['2','2,0']],val:'1.15',a:v=>lineSpace(+v)}]},
-  {l:'Gaya',it:[{t:'btn',ui:'normal',ic:'stylep',l:'Normal',a:()=>block('p')},{t:'btn',ui:'h1',l:'Judul 1',a:()=>block('h1')},{t:'btn',ui:'h2',l:'Judul 2',a:()=>block('h2')}]},
-  {l:'Pengeditan',it:[{t:'btn',big:1,ui:'pilihsemua',ic:'all',l:'Pilih semua',a:()=>selectAll()}]}]},
- {id:'sisipkan',label:'Sisipkan',groups:[
-  {l:'Tabel',it:[{t:'btn',big:1,ui:'tabel',ic:'table',l:'Tabel 3×3',a:()=>insTable()}]},
-  {l:'Ilustrasi',it:[
-    {t:'btn',big:1,ui:'gambar',ic:'image',l:'Gambar',a:()=>insImage()},
-    {t:'btn',big:1,ui:'tautan',ic:'link',l:'Tautan',a:()=>insLink()},
-    {t:'btn',big:1,ui:'kotak',ic:'gen',l:'Kotak Teks',a:()=>insTextBox()}
+   {t:'btn',ui:'bold',id:'bBold',cls:'b',l:'B',title:'Bold',a:()=>cmd('bold')},{t:'btn',ui:'italic',id:'bItal',cls:'i',l:'I',title:'Italic',a:()=>cmd('italic')},{t:'btn',ui:'underline',id:'bUnd',cls:'u',l:'U',title:'Underline',a:()=>cmd('underline')},
+   {t:'sel',ui:'fontcolor',id:'fColor',cls:'',opts:[['#111111','Black'],['#c00000','Red'],['#0050c8','Blue'],['#1f7a3d','Green']],a:v=>cmd('foreColor',v)},
+   {t:'btn',ui:'hl',ic:'hl',title:'Text Highlight Color',a:()=>cmd('hiliteColor','#ffff00')}]},
+  {l:'Paragraph',it:[{t:'btn',ui:'bullet',ic:'ul',title:'Bullets',a:()=>cmd('insertUnorderedList')},{t:'btn',ui:'number',ic:'ol',title:'Numbering',a:()=>cmd('insertOrderedList')},{t:'btn',ui:'indm',ic:'indm',title:'Decrease Indent',a:()=>indent(-1)},{t:'btn',ui:'indp',ic:'indp',title:'Increase Indent',a:()=>indent(1)},
+   {t:'btn',ui:'alL',ic:'left',title:'Align Left',a:()=>align('left')},{t:'btn',ui:'alC',ic:'center',title:'Center',a:()=>align('center')},{t:'btn',ui:'alR',ic:'right',title:'Align Right',a:()=>align('right')},{t:'btn',ui:'alJ',ic:'justify',title:'Justify',a:()=>align('justify')},
+   {t:'sel',ui:'spasi',id:'fSpace',cls:'sz',opts:[['1','1.0'],['1.15','1.15'],['1.5','1.5'],['2','2.0']],val:'1.15',a:v=>lineSpace(+v)}]},
+  {l:'Styles',it:[{t:'btn',ui:'normal',ic:'stylep',l:'Normal',a:()=>block('p')},{t:'btn',ui:'h1',l:'Heading 1',a:()=>block('h1')},{t:'btn',ui:'h2',l:'Heading 2',a:()=>block('h2')}]},
+  {l:'Editing',it:[{t:'btn',big:1,ui:'pilihsemua',ic:'all',l:'Select All',a:()=>selectAll()}]}]},
+ {id:'sisipkan',label:'Insert',groups:[
+  {l:'Tables',it:[{t:'btn',big:1,ui:'tabel',ic:'table',l:'Table',a:()=>insTable()}]},
+  {l:'Illustrations',it:[
+    {t:'btn',big:1,ui:'gambar',ic:'image',l:'Pictures',a:()=>insImage()},
+    {t:'btn',big:1,ui:'tautan',ic:'link',l:'Link',a:()=>insLink()},
+    {t:'btn',big:1,ui:'kotak',ic:'gen',l:'Text Box',a:()=>insTextBox()}
   ]},
-  {l:'Header & Footer',it:[{t:'btn',big:1,ui:'btnHeader',ic:'header',l:'Header',a:()=>setHF('header')},{t:'btn',big:1,ui:'btnFooter',ic:'footer',l:'Footer',a:()=>setHF('footer')},{t:'btn',big:1,ui:'btnPgnum',ic:'pgnum',l:'Nomor halaman',a:()=>insPgnum()}]},
-  {l:'Simbol',it:[{t:'btn',big:1,ui:'simbol',ic:'sym',l:'Simbol ©',a:()=>insText('©')}]}]},
- {id:'desain',label:'Desain',groups:[{l:'Format dokumen',it:[{t:'btn',big:1,ic:'gen',l:'Tema',a:()=>info('Desain: belum aktif di versi ini.')}]}]},
- {id:'tataletak',label:'Tata Letak',groups:[
-  {l:'Pengaturan halaman',it:[
-   {t:'sel',ui:'margin',id:'pMargin',cls:'',opts:[['normal','Margin: Normal'],['narrow','Margin: Sempit'],['moderate','Margin: Sedang'],['wide','Margin: Lebar']],a:v=>{P.margin=v;applyPage();}},
-   {t:'sel',ui:'orient',id:'pOrient',cls:'',opts:[['portrait','Orientasi: Potret'],['landscape','Orientasi: Lanskap']],a:v=>{P.orient=v;fitZoom();applyPage();}},
-   {t:'sel',ui:'ukuran',id:'pSize',cls:'',opts:[['A4','Ukuran: A4'],['Letter','Ukuran: Letter'],['F4','Ukuran: F4']],a:v=>{P.size=v;fitZoom();applyPage();}},
-   {t:'sel',ui:'kolom',id:'pCols',cls:'',opts:[['1','Kolom: 1'],['2','Kolom: 2'],['3','Kolom: 3']],a:v=>{P.cols=+v;applyPage();}}]}]},
- {id:'referensi',label:'Referensi',groups:[
-  {l:'Daftar isi',it:[{t:'btn',big:1,ui:'toc',ic:'gen',l:'Daftar Isi',a:()=>insTOC()}]},
-  {l:'Catatan',it:[
-    {t:'btn',big:1,ui:'footnote',ic:'gen',l:'Catatan Kaki',a:()=>insFootnote()},
-    {t:'btn',big:1,ui:'caption',ic:'gen',l:'Keterangan',a:()=>insCaption()}
+  {l:'Header & Footer',it:[{t:'btn',big:1,ui:'btnHeader',ic:'header',l:'Header',a:()=>setHF('header')},{t:'btn',big:1,ui:'btnFooter',ic:'footer',l:'Footer',a:()=>setHF('footer')},{t:'btn',big:1,ui:'btnPgnum',ic:'pgnum',l:'Page Number',a:()=>insPgnum()}]},
+  {l:'Symbols',it:[{t:'btn',big:1,ui:'simbol',ic:'sym',l:'Symbol ©',a:()=>insText('©')}]}]},
+ {id:'desain',label:'Design',groups:[{l:'Document Formatting',it:[{t:'btn',big:1,ic:'gen',l:'Themes',a:()=>info('Design: belum aktif di versi ini.')}]}]},
+ {id:'tataletak',label:'Layout',groups:[
+  {l:'Page Setup',it:[
+   {t:'sel',ui:'margin',id:'pMargin',cls:'',opts:[['normal','Margins: Normal'],['narrow','Margins: Narrow'],['moderate','Margins: Moderate'],['wide','Margins: Wide']],a:v=>{P.margin=v;applyPage();}},
+   {t:'sel',ui:'orient',id:'pOrient',cls:'',opts:[['portrait','Orientation: Portrait'],['landscape','Orientation: Landscape']],a:v=>{P.orient=v;fitZoom();applyPage();}},
+   {t:'sel',ui:'ukuran',id:'pSize',cls:'',opts:[['A4','Size: A4'],['Letter','Size: Letter'],['F4','Size: F4']],a:v=>{P.size=v;fitZoom();applyPage();}},
+   {t:'sel',ui:'kolom',id:'pCols',cls:'',opts:[['1','Columns: One'],['2','Columns: Two'],['3','Columns: Three']],a:v=>{P.cols=+v;applyPage();}}]}]},
+ {id:'referensi',label:'References',groups:[
+  {l:'Table of Contents',it:[{t:'btn',big:1,ui:'toc',ic:'gen',l:'Table of Contents',a:()=>insTOC()}]},
+  {l:'Footnotes',it:[
+    {t:'btn',big:1,ui:'footnote',ic:'gen',l:'Insert Footnote',a:()=>insFootnote()},
+    {t:'btn',big:1,ui:'caption',ic:'gen',l:'Insert Caption',a:()=>insCaption()}
   ]}
  ]},
- {id:'surat',label:'Surat Menyurat',groups:[{l:'Mulai',it:[{t:'btn',big:1,ic:'gen',l:'Mail merge',a:()=>info('Surat menyurat: modul lanjutan (belum aktif).')}]}]},
- {id:'tinjau',label:'Tinjau',groups:[
-  {l:'Pemeriksaan',it:[
-    {t:'btn',big:1,ic:'spell',l:'Ejaan',a:()=>info('Ejaan: modul lanjutan.')},
-    {t:'btn',big:1,ui:'komentar',ic:'cmt',l:'Komentar',a:()=>insComment()}
+ {id:'surat',label:'Mailings',groups:[{l:'Start',it:[{t:'btn',big:1,ic:'gen',l:'Mail Merge',a:()=>info('Mailings: modul lanjutan (belum aktif).')}]}]},
+ {id:'tinjau',label:'Review',groups:[
+  {l:'Proofing',it:[
+    {t:'btn',big:1,ic:'spell',l:'Spelling',a:()=>info('Spelling: modul lanjutan.')},
+    {t:'btn',big:1,ui:'komentar',ic:'cmt',l:'New Comment',a:()=>insComment()}
   ]},
-  {l:'Ekspor',it:[
-    {t:'btn',big:1,ui:'eksporpdf',ic:'gen',l:'Ekspor PDF',a:()=>exportPDF()}
+  {l:'Export',it:[
+    {t:'btn',big:1,ui:'eksporpdf',ic:'gen',l:'Export PDF',a:()=>exportPDF()}
   ]}
  ]},
- {id:'tampilan',label:'Tampilan',groups:[
-  {l:'Tampilkan',it:[{t:'btn',ui:'tglRuler',id:'bRuler',ic:'gen',l:'Penggaris',title:'Tampilkan/sembunyikan penggaris',a:()=>{showRuler=!showRuler;applyPage();}}]},
-  {l:'Zoom',it:[{t:'btn',big:1,ui:'zoomin2',ic:'zin',l:'Perbesar',a:()=>setZoom(Z+10)},{t:'btn',big:1,ui:'zoomout2',ic:'zout',l:'Perkecil',a:()=>setZoom(Z-10)},{t:'btn',big:1,ui:'zoom100',ic:'fit',l:'100%',a:()=>setZoom(100)}]}]}
+ {id:'tampilan',label:'View',groups:[
+  {l:'Show',it:[{t:'btn',ui:'tglRuler',id:'bRuler',ic:'gen',l:'Ruler',title:'Show/hide ruler',a:()=>{showRuler=!showRuler;applyPage();}}]},
+  {l:'Zoom',it:[{t:'btn',big:1,ui:'zoomin2',ic:'zin',l:'Zoom In',a:()=>setZoom(Z+10)},{t:'btn',big:1,ui:'zoomout2',ic:'zout',l:'Zoom Out',a:()=>setZoom(Z-10)},{t:'btn',big:1,ui:'zoom100',ic:'fit',l:'100%',a:()=>setZoom(100)}]}]}
 ];
 let curTab='beranda';
 function info(t){toast(t);}
@@ -492,11 +492,11 @@ function insLink(){
  cmd('insertHTML','<a href="'+url+'">'+esc(label)+'</a>');
 }
 function insTextBox(){
- cmd('insertHTML','<div style="border:1px solid #333;padding:6px;margin:6px 0;min-height:22px">Ketik isi kotak teks</div><p><br></p>');
+ cmd('insertHTML','<div class="textbox" style="border:1px solid #333;padding:6px;margin:6px 0;min-height:22px">Ketik isi kotak teks</div><p><br></p>');
 }
 function insTOC(){
  const hs=$$('h1, h2',body);
- if(!hs.length){info('Belum ada Heading 1/2. Terapkan dulu di tab Beranda > Gaya.');return;}
+ if(!hs.length){info('Belum ada Heading 1/2. Terapkan gaya Heading dulu di tab Home > Styles.');return;}
  let html='<div class="toc" style="border:1px solid #888;padding:8px;margin:8px 0"><b>Daftar Isi</b><ul style="list-style:none;padding-left:0;margin:4px 0">';
  hs.forEach(h=>{const pad=h.tagName==='H2'?'padding-left:20px;':'';html+='<li style="'+pad+'margin:2px 0">'+esc(h.textContent)+'</li>';});
  html+='</ul></div><p><br></p>';
@@ -516,17 +516,17 @@ function insFootnote(){
 }
 function insCaption(){
  restore();
- cmd('insertHTML','<p style="text-align:center;font-size:10pt;color:#555;font-style:italic">Gambar 1. Keterangan gambar</p>');
+ cmd('insertHTML','<p class="caption" style="text-align:center;font-size:10pt;color:#555;font-style:italic">Gambar 1. Keterangan gambar</p>');
 }
 function insComment(){
  restore();
  const s=getSelection();
  if(!s.rangeCount||s.getRangeAt(0).collapsed){info('Pilih dulu teks yang ingin dikomentari.');return;}
  const text=s.getRangeAt(0).toString();
- cmd('insertHTML','<span style="background:#fff3a0;border-bottom:1px dashed #c00" title="Komentar: periksa bagian ini">'+esc(text)+'</span>');
+ cmd('insertHTML','<span class="comment" style="background:#fff3a0;border-bottom:1px dashed #c00" title="Komentar: periksa bagian ini">'+esc(text)+'</span>');
 }
 function exportPDF(){
- toast('Di dialog cetak pilih "Simpan sebagai PDF".');
+ toast('Pada dialog cetak pilih "Save as PDF" atau "Simpan sebagai PDF".');
  setTimeout(()=>window.print(),400);
 }
 function insText(t){cmd('insertText',t);}
@@ -535,7 +535,7 @@ function insPgnum(){
  P.footer=true;applyPage();
  if(!ftr.querySelector('.pgnum')){const s=document.createElement('span');s.className='pgnum';s.contentEditable='false';s.textContent='1';ftr.appendChild(s);}
 }
-function countWords(){const t=(body.innerText||'').trim();$('#wc').textContent='Jumlah kata: '+(t?t.split(/\s+/).length:0);}
+function countWords(){const t=(body.innerText||'').trim();$('#wc').textContent='Words: '+(t?t.split(/\s+/).length:0);}
 body.addEventListener('input',countWords);
 /* ketuk paragraf = blok paragraf (memudahkan HP) */
 body.addEventListener('click',e=>{
@@ -553,7 +553,7 @@ $('#zoomR').addEventListener('input',e=>setZoom(+e.target.value));
 $('.qa').addEventListener('mousedown',e=>e.preventDefault());
 $('.qa').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
  if(b.dataset.ui==='simpan')toast('Dokumen disimpan (simulasi).');
- if(b.dataset.ui==='batal')cmd('undo');if(b.dataset.ui==='ulangi')cmd('redo');});
+ if(b.dataset.ui==='undo')cmd('undo');if(b.dataset.ui==='redo')cmd('redo');});
 /* pinch-zoom dua jari pada area kertas */
 (function(){let d0=0,z0=100;
  canvas.addEventListener('touchstart',e=>{if(e.touches.length===2){d0=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);z0=Z;}},{passive:true});
@@ -584,7 +584,7 @@ const DOC3='<p style="font-weight:700;text-align:center">SURAT UNDANGAN</p><p>No
 const DOC4='<p id="p1">Laporan kunjungan studi wisata ke Museum Nasional akan disusun bersama oleh panitia kelas.</p>'+
  '<p id="p2">Dokumen ini akan dilengkapi daftar peserta, foto kegiatan, dan informasi penting lainnya.</p>';
 const DOC5='<p id="judul">Panduan Pramuka</p>'+
- '<p>Pramuka membentuk karakter disiplin dan mandiri.</p>'+
+ '<p id="isi1">Pramuka membentuk karakter disiplin dan mandiri.</p>'+
  '<p id="sub1">Persiapan</p><p>Menyiapkan perlengkapan, seragam, dan buku catatan.</p>'+
  '<p id="sub2">Pelaksanaan</p><p>Kegiatan dilaksanakan setiap Jumat sore di lapangan sekolah.</p>';
 const DOC6='<p>Dokumen ini berisi catatan rapat panitia yang <span id="pi">perlu diperiksa</span> sebelum dibagikan ke peserta didik.</p>'+
@@ -595,96 +595,167 @@ function chkTitle(){const e=fe('judul');if(!e)return [miss('Judul')];
  return [{l:'Judul rata tengah',ok:getComputedStyle(e).textAlign==='center'},{l:'Judul tebal (bold)',ok:allText(e,(x,cs)=>isBold(cs))},{l:'Ukuran huruf judul 16',ok:allText(e,(x,cs)=>Math.abs(ptOf(cs)-16)<0.6)}];}
 function chkBody(name,fn){const out=[];['p1','p2','p3'].forEach((id,i)=>{const e=fe(id);out.push(e?{l:'Paragraf '+(i+1)+': '+name,ok:fn(e)}:miss('Paragraf '+(i+1)));});return out;}
 function liFor(t){return $$('li',body).find(li=>li.textContent.trim().toLowerCase()===t.toLowerCase());}
+
 const MODS=[
- {id:'m1',no:'Modul 1',judul:'Mengenal Antarmuka',desc:'Menemukan tab, ribbon, penggaris, status bar, dan zoom.',doc:DOC1,start:{},
+ {id:'m1',no:'Module 1',judul:'Mengenal Antarmuka',desc:'Menemukan tab, grup, tombol, penggaris, dan status bar.',doc:DOC1,start:{},
   tasks:[
-   {j:'Tab Sisipkan',t:'Klik tab <b>Sisipkan</b> pada baris biru di bawah judul.',ui:['tab-sisipkan'],h:['Tab berada di baris biru, di sebelah kanan Beranda.','Geser baris tab ke samping bila perlu.']},
-   {j:'Tab Tata Letak',t:'Klik tab <b>Tata Letak</b>. Tab ini berisi pengaturan margin, orientasi, dan ukuran kertas.',ui:['tab-tataletak'],h:['Tab keempat dari kiri.','Namanya bukan Desain.']},
-   {j:'Tombol Tebal',t:'Kembali ke tab <b>Beranda</b>, lalu klik tombol <b>Tebal (B)</b> di grup Font.',ui:['bold'],h:['Grup Font ada di tab Beranda.','Tombol Tebal berupa huruf B tebal.']},
-   {j:'Ukuran huruf',t:'Temukan <b>kotak ukuran huruf</b> (angka 11) di grup Font lalu ketuk.',ui:['fontsize'],h:['Letaknya di sebelah kanan kotak nama font.','Kotak kecil berisi angka.']},
-   {j:'Simpan',t:'Temukan tombol <b>Simpan</b> di <i>Quick Access Toolbar</i> (pojok kiri atas, bar biru paling atas).',ui:['simpan'],h:['Quick Access Toolbar ada di pojok kiri atas.','Ikonnya berbentuk disket.']},
-   {j:'Penggaris',t:'Ketuk <b>penggaris (ruler)</b>, garis berskala di atas kertas.',ui:['penggaris'],h:['Penggaris ada di antara ribbon dan kertas.','Angka 1, 2, 3 menunjukkan jarak dalam cm.']},
-   {j:'Status bar',t:'Ketuk tulisan <b>Jumlah kata</b> pada status bar di bagian paling bawah.',ui:['katakata'],h:['Status bar adalah bar biru di bawah.','Tulisannya diawali "Jumlah kata:".']},
-   {j:'Zoom',t:'Ketuk tombol <b>+</b> di sisi kanan status bar untuk memperbesar tampilan.',ui:['zoomin'],h:['Zoom ada di pojok kanan bawah.','Tombol + berada di kanan slider.']}
+   {j:'Tab Insert',t:'Buka tab <b>Insert</b>.',ui:['tab-sisipkan'],h:['Baris tab di atas.','Tab kedua dari kiri.']},
+   {j:'Tab Layout',t:'Buka tab <b>Layout</b>.',ui:['tab-tataletak'],h:['Baris tab di atas.','Tab keempat dari kiri.']},
+   {j:'Tab Review',t:'Buka tab <b>Review</b>.',ui:['tab-tinjau'],h:['Baris tab di atas.','Tab ketujuh dari kiri.']},
+   {j:'Tab View',t:'Buka tab <b>View</b>.',ui:['tab-tampilan'],h:['Baris tab di atas.','Tab paling kanan.']},
+   {j:'Bold',t:'Klik tombol <b>Bold</b>.',ui:['bold'],h:['Grup Font, tab Home.','Huruf B tebal.']},
+   {j:'Font Size',t:'Ketuk kotak <b>Font Size</b>.',ui:['fontsize'],h:['Grup Font, tab Home.','Kotak kecil berisi angka.']},
+   {j:'Save',t:'Klik tombol <b>Save</b>.',ui:['simpan'],h:['Quick Access Toolbar (pojok kiri atas).','Ikon disket.']},
+   {j:'Undo',t:'Klik tombol <b>Undo</b>.',ui:['undo'],h:['Quick Access Toolbar.','Ikon panah ke kiri.']},
+   {j:'Ruler',t:'Temukan <b>Ruler</b>.',ui:['penggaris'],h:['Antara ribbon dan kertas.','Garis berskala angka 1, 2, 3.']},
+   {j:'Zoom In',t:'Klik tombol <b>Zoom In</b>.',ui:['zoomin'],h:['Status bar kanan bawah.','Tombol + di kanan slider.']}
   ]},
- {id:'m2',no:'Modul 2',judul:'Format Teks dan Paragraf',desc:'Font, ukuran, rata teks, spasi, warna, dan daftar butir.',doc:DOC2,start:{},
+ {id:'m2',no:'Module 2',judul:'Format Teks dan Paragraf',desc:'Format huruf, paragraf, warna, dan daftar butir.',doc:DOC2,start:{},
   tasks:[
-   {j:'Format judul',t:'Ketuk judul <b>Laporan Kegiatan Pramuka</b>. Jadikan <b>rata tengah, tebal, ukuran 16</b>.',c:chkTitle,h:['Semua ada di tab Beranda: grup Font dan grup Paragraf.','Gunakan tombol B, kotak ukuran, dan tombol rata tengah.']},
-   {j:'Font isi laporan',t:'Pada ketiga paragraf isi, ubah font menjadi <b>Times New Roman</b> ukuran <b>12</b>. Boleh satu per satu atau pakai <i>Pilih semua</i>.',c:()=>chkBody('Times New Roman 12',e=>allText(e,(x,cs)=>famHas(cs,'Times New Roman')&&Math.abs(ptOf(cs)-12)<0.6)),h:['Ketuk paragraf, lalu pilih font di kotak nama font.','Setelah itu atur ukuran di kotak sebelahnya.']},
-   {j:'Rata kiri-kanan',t:'Ratakan ketiga paragraf isi menjadi <b>rata kiri-kanan (Justify)</b>.',c:()=>chkBody('rata kiri-kanan',e=>getComputedStyle(e).textAlign==='justify'),h:['Grup Paragraf punya empat tombol rata teks.','Justify adalah ikon terakhir dengan garis penuh.']},
-   {j:'Spasi baris',t:'Atur <b>spasi baris 1,5</b> untuk ketiga paragraf isi.',c:()=>chkBody('spasi 1,5',e=>Math.abs(lineRatio(e)-1.5)<0.06),h:['Kotak spasi ada di ujung grup Paragraf.','Pilih 1,5 lalu cek hasilnya.']},
-   {j:'Warna dan garis bawah',t:'Pada kalimat <b>PENTING</b>, beri <b>warna merah</b> dan <b>garis bawah</b>.',c:()=>{const e=fe('penting');if(!e)return [miss('Kalimat penting')];return [{l:'Teks berwarna merah',ok:allText(e,(x,cs)=>isRed(cs))},{l:'Teks bergaris bawah',ok:textNodes(e).length>0&&textNodes(e).every(n=>hasDeco(n.parentElement,'underline'))}];},h:['Warna ada di kotak "A" pada grup Font.','Garis bawah memakai tombol U.']},
-   {j:'Daftar butir',t:'Ubah tiga baris <b>Tenda, Tali, Kompas</b> menjadi daftar <b>butir (bullet)</b>. Ketuk satu per satu.',c:()=>['Tenda','Tali','Kompas'].map(t=>{const li=liFor(t);return {l:t+' menjadi butir',ok:!!li&&li.parentElement.tagName==='UL'};}),h:['Tombol bullet ada di grup Paragraf, ikon titik dan garis.','Ketuk baris, lalu tekan tombol bullet.']}
+   {j:'Judul rata tengah',t:'Buat judul menjadi <b>rata tengah</b>.',
+    c:()=>{const e=fe('judul');return e?[{l:'Judul rata tengah',ok:getComputedStyle(e).textAlign==='center'}]:[miss('Judul')];},
+    h:['Ketuk judul, lalu klik tombol Center.','Grup Paragraph, tab Home.']},
+   {j:'Judul tebal',t:'Buat judul menjadi <b>tebal</b>.',
+    c:()=>{const e=fe('judul');return e?[{l:'Judul tebal',ok:allText(e,(x,cs)=>isBold(cs))}]:[miss('Judul')];},
+    h:['Ketuk judul, lalu klik B.','Grup Font.']},
+   {j:'Judul ukuran 16',t:'Ubah ukuran huruf judul menjadi <b>16</b>.',
+    c:()=>{const e=fe('judul');return e?[{l:'Ukuran 16',ok:allText(e,(x,cs)=>Math.abs(ptOf(cs)-16)<0.6)}]:[miss('Judul')];},
+    h:['Ketuk judul.','Pilih 16 di kotak Font Size.']},
+   {j:'Font paragraf',t:'Ubah font ketiga paragraf isi menjadi <b>Times New Roman</b>.',
+    c:()=>chkBody('Times New Roman',e=>allText(e,(x,cs)=>famHas(cs,'Times New Roman'))),
+    h:['Ketuk paragraf satu per satu.','Pilih font di kotak nama font.']},
+   {j:'Ukuran paragraf',t:'Ubah ukuran huruf ketiga paragraf isi menjadi <b>12</b>.',
+    c:()=>chkBody('ukuran 12',e=>allText(e,(x,cs)=>Math.abs(ptOf(cs)-12)<0.6)),
+    h:['Kotak Font Size.','Pilih angka 12.']},
+   {j:'Rata kiri-kanan',t:'Buat ketiga paragraf isi menjadi <b>rata kiri-kanan</b>.',
+    c:()=>chkBody('Justify',e=>getComputedStyle(e).textAlign==='justify'),
+    h:['Grup Paragraph.','Ikon Justify dengan garis penuh.']},
+   {j:'Spasi 1,5',t:'Atur <b>spasi baris 1,5</b> pada ketiga paragraf isi.',
+    c:()=>chkBody('spasi 1,5',e=>Math.abs(lineRatio(e)-1.5)<0.06),
+    h:['Kotak spasi di ujung grup Paragraph.','Pilih 1.5.']},
+   {j:'Warna merah PENTING',t:'Beri <b>warna merah</b> pada kalimat PENTING.',
+    c:()=>{const e=fe('penting');return e?[{l:'Teks merah',ok:allText(e,(x,cs)=>isRed(cs))}]:[miss('PENTING')];},
+    h:['Kotak font color (A).','Pilih Red.']},
+   {j:'Garis bawah PENTING',t:'Beri <b>garis bawah</b> pada kalimat PENTING.',
+    c:()=>{const e=fe('penting');return e?[{l:'Teks bergaris bawah',ok:textNodes(e).length>0&&textNodes(e).every(n=>hasDeco(n.parentElement,'underline'))}]:[miss('PENTING')];},
+    h:['Tombol U di grup Font.','Teks harus terpilih.']},
+   {j:'Daftar butir',t:'Ubah baris Tenda, Tali, Kompas menjadi <b>daftar butir</b>.',
+    c:()=>['Tenda','Tali','Kompas'].map(t=>{const li=liFor(t);return {l:t+' jadi bullet',ok:!!li&&li.parentElement.tagName==='UL'};}),
+    h:['Tombol Bullets di grup Paragraph.','Ketuk tiap baris, lalu Bullets.']}
   ]},
- {id:'m3',no:'Modul 3',judul:'Tata Letak Halaman',desc:'Ukuran kertas, orientasi, margin, kolom, header, dan nomor halaman.',doc:DOC3,start:{size:'Letter',orient:'landscape',margin:'normal',cols:1,header:false,footer:false},
+ {id:'m3',no:'Module 3',judul:'Tata Letak Halaman',desc:'Ukuran kertas, orientasi, margin, kolom, header, dan footer.',doc:DOC3,start:{size:'Letter',orient:'landscape',margin:'normal',cols:1,header:false,footer:false},
   tasks:[
-   {j:'Ukuran kertas A4',t:'Surat resmi di Indonesia memakai kertas <b>A4</b>. Ubah ukuran kertas di tab <b>Tata Letak</b>.',c:()=>[{l:'Ukuran kertas A4',ok:P.size==='A4'}],h:['Buka tab Tata Letak.','Pilih "Ukuran: A4".']},
-   {j:'Orientasi potret',t:'Ubah orientasi kertas menjadi <b>Potret</b>.',c:()=>[{l:'Orientasi potret',ok:P.orient==='portrait'}],h:['Masih di tab Tata Letak.','Pilih "Orientasi: Potret".']},
-   {j:'Margin sempit',t:'Ubah margin menjadi <b>Sempit</b> agar teks lebih lebar.',c:()=>[{l:'Margin sempit',ok:P.margin==='narrow'}],h:['Pilih "Margin: Sempit".','Perhatikan penggaris: area abu-abu mengecil.']},
-   {j:'Dua kolom',t:'Ubah isi surat menjadi <b>2 kolom</b> seperti koran.',c:()=>[{l:'Jumlah kolom 2',ok:P.cols===2}],h:['Pilih "Kolom: 2".','Teks dibagi menjadi dua lajur.']},
-   {j:'Header',t:'Pada tab <b>Sisipkan</b>, aktifkan <b>Header</b>, lalu ketik teks <b>SMA Negeri 1</b> pada kotak header.',c:()=>[{l:'Header aktif',ok:P.header},{l:'Header berisi teks',ok:hdr.textContent.trim().length>=3}],h:['Tab Sisipkan, grup Header & Footer.','Ketuk kotak putus-putus di bagian atas kertas lalu ketik.']},
-   {j:'Footer dan nomor halaman',t:'Masih di tab <b>Sisipkan</b>, tambahkan <b>Nomor halaman</b> pada footer.',c:()=>[{l:'Footer aktif',ok:P.footer},{l:'Nomor halaman ada di footer',ok:!!ftr.querySelector('.pgnum')}],h:['Tombol "Nomor halaman" ada di grup Header & Footer.','Nomor muncul di bagian bawah kertas.']}
+   {j:'Kertas A4',t:'Ubah ukuran kertas menjadi <b>A4</b>.',
+    c:()=>[{l:'Ukuran A4',ok:P.size==='A4'}],h:['Dropdown Size di grup Page Setup.','Pilih A4.']},
+   {j:'Portrait',t:'Ubah orientasi kertas menjadi <b>Portrait</b>.',
+    c:()=>[{l:'Orientasi Portrait',ok:P.orient==='portrait'}],h:['Dropdown Orientation.','Pilih Portrait.']},
+   {j:'Margin Narrow',t:'Ubah margin menjadi <b>Narrow</b>.',
+    c:()=>[{l:'Margin Narrow',ok:P.margin==='narrow'}],h:['Dropdown Margins.','Pilih Narrow.']},
+   {j:'Dua kolom',t:'Atur isi menjadi <b>2 kolom</b>.',
+    c:()=>[{l:'Kolom 2',ok:P.cols===2}],h:['Dropdown Columns.','Pilih Two.']},
+   {j:'Header aktif',t:'Aktifkan <b>Header</b>.',
+    c:()=>[{l:'Header aktif',ok:P.header}],h:['Tab Insert, grup Header & Footer.','Tombol Header.']},
+   {j:'Isi header',t:'Ketik teks <b>SMA Negeri 1</b> pada kotak header.',
+    c:()=>[{l:'Header berisi teks',ok:hdr.textContent.trim().length>=3}],h:['Ketuk kotak putus-putus di atas kertas.','Ketik teksnya.']},
+   {j:'Footer aktif',t:'Aktifkan <b>Footer</b>.',
+    c:()=>[{l:'Footer aktif',ok:P.footer}],h:['Tab Insert.','Tombol Footer.']},
+   {j:'Page Number',t:'Tambahkan <b>Page Number</b>.',
+    c:()=>[{l:'Nomor halaman ada',ok:!!ftr.querySelector('.pgnum')}],h:['Tab Insert.','Tombol Page Number.']},
+   {j:'Margin Normal',t:'Kembalikan margin menjadi <b>Normal</b>.',
+    c:()=>[{l:'Margin Normal',ok:P.margin==='normal'}],h:['Dropdown Margins.','Pilih Normal.']},
+   {j:'Satu kolom',t:'Kembalikan isi menjadi <b>1 kolom</b>.',
+    c:()=>[{l:'Kolom 1',ok:P.cols===1}],h:['Dropdown Columns.','Pilih One.']}
   ]},
- {id:'m4',no:'Modul 4',judul:'Sisipkan Objek',desc:'Tabel, gambar, kotak teks, simbol, dan tautan.',doc:DOC4,start:{},
+ {id:'m4',no:'Module 4',judul:'Sisipkan Objek',desc:'Tabel, gambar, tautan, kotak teks, header, dan nomor halaman.',doc:DOC4,start:{},
   tasks:[
-   {j:'Tabel 3×3',t:'Sisipkan <b>tabel 3×3</b> di bawah paragraf pertama (tab <b>Sisipkan</b> > Tabel).',
-    c:()=>[{l:'Tabel 3 baris',ok:(body.querySelectorAll('table tr').length||0)>=3},
-           {l:'Tabel 3 kolom',ok:!!(body.querySelector('table tr')&&body.querySelector('table tr').children.length>=3)}],
-    h:['Tab Sisipkan grup Tabel.','Tombol "Tabel 3×3".']},
-   {j:'Isi sel tabel',t:'Ketik <b>No</b> di sel kiri atas dan <b>Nama</b> di sel sebelahnya.',
-    c:()=>{const td=body.querySelectorAll('table td');return [
-      {l:'Sel berisi "No"',ok:!!(td[0]&&td[0].textContent.trim().toLowerCase()==='no')},
-      {l:'Sel berisi "Nama"',ok:!!(td[1]&&td[1].textContent.trim().toLowerCase()==='nama')}];},
-    h:['Ketuk dalam sel, lalu ketik.','Sel pertama kiri atas.']},
-   {j:'Gambar',t:'Sisipkan <b>gambar</b> lewat tab Sisipkan > Gambar.',
-    c:()=>[{l:'Ada gambar di dokumen',ok:!!body.querySelector('img')}],
-    h:['Pilih file dari galeri.','Tab Sisipkan grup Ilustrasi.']},
-   {j:'Simbol ©',t:'Sisipkan simbol <b>©</b> di akhir dokumen.',
+   {j:'Tabel 3×3',t:'Sisipkan <b>tabel 3×3</b>.',
+    c:()=>[{l:'Tabel 3 baris',ok:(body.querySelectorAll('table tr').length||0)>=3},{l:'Tabel 3 kolom',ok:!!(body.querySelector('table tr')&&body.querySelector('table tr').children.length>=3)}],
+    h:['Tab Insert, grup Tables.','Tombol Table.']},
+   {j:'Sel "No"',t:'Ketik <b>No</b> pada sel kiri atas tabel.',
+    c:()=>{const td=body.querySelectorAll('table td');return [{l:'Sel No',ok:!!(td[0]&&td[0].textContent.trim().toLowerCase()==='no')}];},
+    h:['Ketuk sel pertama.','Ketik No.']},
+   {j:'Sel "Nama"',t:'Ketik <b>Nama</b> pada sel di sebelah kanannya.',
+    c:()=>{const td=body.querySelectorAll('table td');return [{l:'Sel Nama',ok:!!(td[1]&&td[1].textContent.trim().toLowerCase()==='nama')}];},
+    h:['Ketuk sel kedua di baris pertama.','Ketik Nama.']},
+   {j:'Gambar',t:'Sisipkan <b>gambar</b>.',
+    c:()=>[{l:'Ada gambar',ok:!!body.querySelector('img')}],
+    h:['Tab Insert, grup Illustrations.','Tombol Pictures.']},
+   {j:'Tautan',t:'Buat <b>tautan</b>.',
+    c:()=>[{l:'Ada tautan',ok:!!body.querySelector('a[href]')}],
+    h:['Tab Insert, grup Illustrations.','Tombol Link.']},
+   {j:'Text Box',t:'Sisipkan <b>Text Box</b>.',
+    c:()=>[{l:'Ada text box',ok:!!body.querySelector('.textbox')}],
+    h:['Tab Insert, grup Illustrations.','Tombol Text Box.']},
+   {j:'Simbol ©',t:'Sisipkan simbol <b>©</b>.',
     c:()=>[{l:'Ada simbol ©',ok:body.innerText.includes('©')}],
-    h:['Tab Sisipkan grup Simbol.','Tombol "Simbol ©".']},
-   {j:'Tautan',t:'Buat <b>tautan</b> (hyperlink) lewat tab Sisipkan > Tautan.',
-    c:()=>[{l:'Ada tautan',ok:!!body.querySelector('a[href*="kemdikbud"]')}],
-    h:['Tab Sisipkan > Tautan.','Tautan default sudah mengarah ke kemdikbud.go.id.']}
+    h:['Tab Insert, grup Symbols.','Tombol Symbol ©.']},
+   {j:'Header aktif',t:'Aktifkan <b>Header</b>.',
+    c:()=>[{l:'Header aktif',ok:P.header}],h:['Tab Insert, grup Header & Footer.','Tombol Header.']},
+   {j:'Footer aktif',t:'Aktifkan <b>Footer</b>.',
+    c:()=>[{l:'Footer aktif',ok:P.footer}],h:['Tab Insert.','Tombol Footer.']},
+   {j:'Page Number',t:'Tambahkan <b>Page Number</b>.',
+    c:()=>[{l:'Nomor halaman ada',ok:!!ftr.querySelector('.pgnum')}],h:['Tab Insert.','Tombol Page Number.']}
   ]},
- {id:'m5',no:'Modul 5',judul:'Dokumen Profesional',desc:'Heading, daftar isi otomatis, catatan kaki, dan keterangan.',doc:DOC5,start:{},
+ {id:'m5',no:'Module 5',judul:'Dokumen Profesional',desc:'Heading, daftar isi, catatan kaki, keterangan, tabel, dan nomor halaman.',doc:DOC5,start:{},
   tasks:[
-   {j:'Heading 1',t:'Ketuk judul <b>Panduan Pramuka</b>, lalu terapkan gaya <b>Heading 1 (Judul 1)</b> dari tab Beranda > Gaya.',
-    c:()=>{const h=body.querySelector('h1');return [
-      {l:'Ada Heading 1',ok:!!h},
-      {l:'Isinya judul',ok:!!(h&&/pramuka/i.test(h.textContent))}];},
-    h:['Ketuk baris judul.','Tab Beranda grup Gaya.']},
-   {j:'Heading 2',t:'Terapkan <b>Heading 2</b> pada sub-judul <b>Persiapan</b> dan <b>Pelaksanaan</b>.',
-    c:()=>[{l:'Ada 2 Heading 2',ok:$$('h2',body).length>=2}],
-    h:['Satu per satu.','Ada 2 sub-judul.']},
-   {j:'Daftar isi',t:'Sisipkan <b>Daftar Isi</b> di awal dokumen (tab Sisipkan > Referensi).',
+   {j:'Heading 1',t:'Terapkan <b>Heading 1</b> pada judul "Panduan Pramuka".',
+    c:()=>{const h=body.querySelector('h1');return [{l:'Ada Heading 1',ok:!!h},{l:'Isinya judul',ok:!!(h&&/pramuka/i.test(h.textContent))}];},
+    h:['Tab Home, grup Styles.','Tombol Heading 1.']},
+   {j:'Heading 2 Persiapan',t:'Terapkan <b>Heading 2</b> pada sub-judul "Persiapan".',
+    c:()=>{const hs=$$('h2',body);return [{l:'H2 Persiapan',ok:hs.some(h=>/persiapan/i.test(h.textContent))}];},
+    h:['Tab Home, grup Styles.','Tombol Heading 2.']},
+   {j:'Heading 2 Pelaksanaan',t:'Terapkan <b>Heading 2</b> pada sub-judul "Pelaksanaan".',
+    c:()=>{const hs=$$('h2',body);return [{l:'H2 Pelaksanaan',ok:hs.some(h=>/pelaksanaan/i.test(h.textContent))}];},
+    h:['Sama seperti tugas sebelumnya.','Tombol Heading 2.']},
+   {j:'Table of Contents',t:'Sisipkan <b>Table of Contents</b>.',
     c:()=>[{l:'Ada daftar isi',ok:!!body.querySelector('.toc')}],
-    h:['Tab Sisipkan grup Referensi.','Tombol "Daftar Isi".']},
-   {j:'Catatan kaki',t:'Beri <b>catatan kaki</b> pada kata <b>pramuka</b> di paragraf pertama.',
+    h:['Tab References.','Tombol Table of Contents.']},
+   {j:'Catatan kaki',t:'Beri <b>catatan kaki</b> pada kata "pramuka" di paragraf pertama.',
     c:()=>[{l:'Ada catatan kaki',ok:!!body.querySelector('.fnbox')}],
-    h:['Pilih kata "pramuka".','Tab Sisipkan > Catatan Kaki.']},
-   {j:'Keterangan gambar',t:'Tambahkan <b>keterangan gambar</b> di bawah isi (tab Sisipkan > Keterangan).',
-    c:()=>[{l:'Ada keterangan (huruf miring)',ok:!!body.querySelector('p[style*="italic"]')}],
-    h:['Tab Sisipkan > Keterangan.','Bisa juga ketik manual dengan huruf miring.']}
+    h:['Tab References.','Tombol Insert Footnote.']},
+   {j:'Caption',t:'Sisipkan <b>Caption</b>.',
+    c:()=>[{l:'Ada caption',ok:!!body.querySelector('.caption')}],
+    h:['Tab References.','Tombol Insert Caption.']},
+   {j:'Judul tebal',t:'Buat judul menjadi <b>tebal</b>.',
+    c:()=>{const e=fe('judul');return e?[{l:'Judul tebal',ok:allText(e,(x,cs)=>isBold(cs))}]:[miss('Judul')];},
+    h:['Tombol B di grup Font.','Judul harus sudah jadi Heading 1.']},
+   {j:'Paragraf miring',t:'Buat paragraf "Pramuka membentuk karakter..." menjadi <b>miring</b>.',
+    c:()=>{const e=fe('isi1');return e?[{l:'Paragraf miring',ok:allText(e,(x,cs)=>cs.fontStyle==='italic')}]:[miss('Paragraf')];},
+    h:['Tombol I di grup Font.','Ketuk paragraf dulu.']},
+   {j:'Tabel',t:'Sisipkan <b>tabel</b>.',
+    c:()=>[{l:'Ada tabel',ok:!!body.querySelector('table')}],
+    h:['Tab Insert, grup Tables.','Tombol Table.']},
+   {j:'Page Number',t:'Tambahkan <b>Page Number</b>.',
+    c:()=>[{l:'Nomor halaman ada',ok:!!ftr.querySelector('.pgnum')}],h:['Tab Insert, grup Header & Footer.','Tombol Page Number.']}
   ]},
- {id:'m6',no:'Modul 6',judul:'Fitur Dunia Kerja',desc:'Komentar, ekspor PDF, dan pengenalan fitur lanjutan.',doc:DOC6,start:{},
+ {id:'m6',no:'Module 6',judul:'Fitur Dunia Kerja',desc:'Komentar, ekspor PDF, dan tab-tab lanjutan.',doc:DOC6,start:{},
   tasks:[
-   {j:'Komentar',t:'Pilih teks <b>perlu diperiksa</b>, lalu tambahkan <b>komentar</b> (tab Tinjau > Komentar).',
-    c:()=>[{l:'Ada penanda komentar',ok:!!body.querySelector('span[title]')}],
-    h:['Tab Tinjau grup Pemeriksaan.','Pilih teks dulu sebelum menekan Komentar.']},
-   {j:'Ekspor PDF',t:'Gunakan tombol <b>Ekspor PDF</b> (tab Tinjau), lalu pilih "Simpan sebagai PDF".',
-    ui:['eksporpdf'],
-    h:['Tab Tinjau grup Ekspor.','Di dialog cetak, pilih tujuan "Simpan sebagai PDF".']},
-   {j:'Kenali Mail Merge',t:'Buka tab <b>Surat Menyurat</b> untuk mengenal fitur Mail merge.',
-    ui:['tab-surat'],
-    h:['Tab setelah Referensi.','Tab "Surat Menyurat".']},
-   {j:'Kenali Track Changes',t:'Buka tab <b>Tinjau</b> — di sinilah Ejaan, Komentar, dan Track Changes bersaudara.',
-    ui:['tab-tinjau'],
-    h:['Tab sebelum Tampilan.','Tab "Tinjau".']}
+   {j:'New Comment',t:'Beri <b>komentar</b> pada teks "perlu diperiksa".',
+    c:()=>[{l:'Ada komentar',ok:!!body.querySelector('.comment')}],
+    h:['Pilih teks "perlu diperiksa" dulu.','Tab Review, tombol New Comment.']},
+   {j:'Export PDF',t:'Ekspor dokumen ke <b>PDF</b>.',
+    ui:['eksporpdf'],h:['Tab Review, grup Export.','Pada dialog cetak pilih "Save as PDF".']},
+   {j:'Tab Mailings',t:'Buka tab <b>Mailings</b>.',
+    ui:['tab-surat'],h:['Baris tab di atas.','Tab setelah References.']},
+   {j:'Tab Review',t:'Buka tab <b>Review</b>.',
+    ui:['tab-tinjau'],h:['Baris tab di atas.','Tab sebelum View.']},
+   {j:'Tab References',t:'Buka tab <b>References</b>.',
+    ui:['tab-referensi'],h:['Baris tab di atas.','Tab sebelum Mailings.']},
+   {j:'Tab Design',t:'Buka tab <b>Design</b>.',
+    ui:['tab-desain'],h:['Baris tab di atas.','Tab ketiga dari kiri.']},
+   {j:'Zoom In',t:'Klik tombol <b>Zoom In</b>.',
+    ui:['zoomin'],h:['Status bar kanan bawah.','Tombol + di kanan slider.']},
+   {j:'Zoom Out',t:'Klik tombol <b>Zoom Out</b>.',
+    ui:['zoomout'],h:['Status bar kanan bawah.','Tombol − di kiri slider.']},
+   {j:'Ruler',t:'Ketuk <b>Ruler</b>.',
+    ui:['penggaris'],h:['Antara ribbon dan kertas.','Garis berskala angka 1, 2, 3.']},
+   {j:'Save',t:'Klik tombol <b>Save</b>.',
+    ui:['simpan'],h:['Quick Access Toolbar (pojok kiri atas).','Ikon disket.']}
   ]}
 ];
 
 /* ---------- mesin tugas ---------- */
-let R=null; // runtime modul aktif
+let R=null;
 const taskEl=$('#task');
 function setupDoc(m, opts){
  opts = opts || {};
@@ -731,14 +802,15 @@ function openModule(id){
  if (!m || m.lock) return;
  if (!S.student.nama.trim()) { toast('Isi nama siswa dulu.'); $('#inNama').focus(); return; }
  const sess = S.sessions && S.sessions[id];
+ const sessValid = sess && sess.scores && sess.scores.length === m.tasks.length;
  R = {
   m, idx: 0, hints: 0, wrong: 0, attempts: 0, done: false,
-  scores: (sess && sess.scores) ? sess.scores.slice() : m.tasks.map(() => 0),
+  scores: sessValid ? sess.scores.slice() : m.tasks.map(() => 0),
   fb: null, hint: '', min: false
  };
  $('#docName').textContent = m.judul + ' - Lab Kata';
  show('lab'); setupDoc(m);
- if (sess && typeof sess.idx === 'number') {
+ if (sessValid && typeof sess.idx === 'number') {
   R.idx = Math.min(sess.idx, m.tasks.length - 1);
   renderTask();
  } else {
