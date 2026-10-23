@@ -71,7 +71,8 @@ button{cursor:pointer}
 .ribbon{flex:none;display:flex;background:var(--surface);border-bottom:1px solid var(--line);overflow-x:auto;overflow-y:hidden;height:82px;scrollbar-width:thin}
 .ribbon[hidden]{display:none!important}
 .grp{flex:none;display:flex;flex-direction:column;border-right:1px solid var(--line);padding:3px 8px 0;min-width:0}
-.grp .items{flex:1;display:flex;align-items:center;gap:3px;flex-wrap:wrap;align-content:center;max-width:230px}
+/* PERBAIKAN: flex-wrap: nowrap agar item tidak turun ke bawah dan terpotong. max-width dihilangkan agar grup melebar dan bisa di-scroll */
+.grp .items{flex:1;display:flex;align-items:center;gap:4px;flex-wrap:nowrap;align-content:center}
 .grp .gl{text-align:center;font-size:11px;color:var(--muted);height:16px;line-height:16px;white-space:nowrap}
 .rb{display:inline-flex;align-items:center;justify-content:center;gap:4px;min-width:34px;height:32px;padding:0 6px;background:transparent;border:1px solid transparent;border-radius:3px;font-size:12px;white-space:nowrap}
 .rb:hover{background:var(--surface-2);border-color:var(--line)}
@@ -249,7 +250,8 @@ const SALT='labkata-v1-2026';
 function hash(str){let h1=0xdeadbeef,h2=0x41c6ce57;for(let i=0;i<str.length;i++){const c=str.charCodeAt(i);h1=Math.imul(h1^c,2654435761);h2=Math.imul(h2^c,1597334677);}
  h1=Math.imul(h1^(h1>>>16),2246822507)^Math.imul(h2^(h2>>>13),3266489909);h2=Math.imul(h2^(h2>>>16),2246822507)^Math.imul(h1^(h1>>>13),3266489909);
  return (4294967296*(2097151&h2)+(h1>>>0)).toString(36);}
-const KEY='labkata.v2';
+// PERBAIKAN: Versi KEY dinaikkan ke v3 agar cache HP ter-reset dan CSS baru langsung terpakai
+const KEY='labkata.v3';
 let S={student:{nama:'',kelas:''},prog:{},sessions:{}};
 try{const r=localStorage.getItem(KEY);if(r){const o=JSON.parse(r);if(o){if(o.prog)S.prog=o.prog;if(o.student)S.student=o.student;if(o.sessions)S.sessions=o.sessions;}}}catch(e){}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
