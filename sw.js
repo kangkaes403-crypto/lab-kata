@@ -1,5 +1,5 @@
 // sw.js — Service Worker Lab Kata
-const CACHE = 'labkata-v3';
+const CACHE = 'labkata-v5';
 const ASSETS = ['./', './index.html'];
 
 self.addEventListener('install', (e) => {
