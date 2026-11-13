@@ -51,13 +51,22 @@ button{cursor:pointer}
 .mod.lock{opacity:.55;cursor:default;background:var(--surface)}
 .mod:not(.lock):hover{border-color:var(--accent)}
 
-/* Box Kode Akses */
+/* Box Kode Akses & Modal */
 .unlock-box{margin-top:18px; padding:12px 16px; border:1px solid var(--line); border-radius:6px; background:var(--surface-2); max-width:450px;}
 .unlock-box b{font-size:14px;}
 .unlock-box p{margin:2px 0 8px; font-size:12px; color:var(--muted);}
 .unlock-box .input-group{display:flex; gap:8px;}
-.unlock-box input{flex:1; padding:8px 10px; border:1px solid var(--line); border-radius:4px; text-transform:uppercase;}
+.unlock-box input{flex:1; padding:8px 10px; border:1px solid var(--line); border-radius:4px; text-transform:uppercase; background:var(--surface);}
 .unlock-box input::placeholder{text-transform:none;}
+
+/* Modal Custom Margin */
+.modal-bg { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:100; align-items:center; justify-content:center; padding:20px;}
+.modal-bg.show { display:flex; }
+.modal-box { background:var(--surface); padding:20px; border-radius:8px; max-width:300px; width:100%; box-shadow:var(--shadow); }
+.modal-box h3 { margin:0 0 10px; font-size:16px; }
+.modal-box label { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; font-size:13px; }
+.modal-box input { width:80px; padding:4px 8px; border:1px solid var(--line); border-radius:4px; }
+.modal-box .actions { display:flex; justify-content:flex-end; gap:8px; margin-top:16px; }
 
 .home-foot{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;align-items:center;color:var(--muted);font-size:12px}
 .btn{padding:8px 14px;border:1px solid var(--line);background:var(--surface-2);border-radius:4px}
@@ -80,7 +89,6 @@ button{cursor:pointer}
 .ribbon{flex:none;display:flex;background:var(--surface);border-bottom:1px solid var(--line);overflow-x:auto;overflow-y:hidden;height:82px;scrollbar-width:thin}
 .ribbon[hidden]{display:none!important}
 .grp{flex:none;display:flex;flex-direction:column;border-right:1px solid var(--line);padding:3px 8px 0;min-width:0}
-/* flex-wrap: nowrap agar item berjejer menyamping */
 .grp .items{flex:1;display:flex;align-items:center;gap:4px;flex-wrap:nowrap;align-content:center}
 .grp .gl{text-align:center;font-size:11px;color:var(--muted);height:16px;line-height:16px;white-space:nowrap}
 .rb{display:inline-flex;align-items:center;justify-content:center;gap:4px;min-width:34px;height:32px;padding:0 6px;background:transparent;border:1px solid transparent;border-radius:3px;font-size:12px;white-space:nowrap}
@@ -222,6 +230,21 @@ button{cursor:pointer}
   </div>
 </main>
 
+<!-- Modal untuk Custom Margin -->
+<div class="modal-bg" id="modalMargin">
+  <div class="modal-box">
+    <h3>Custom Margins</h3>
+    <label>Top: <input type="number" id="inpTop" value="3" step="0.1"> cm</label>
+    <label>Left: <input type="number" id="inpLeft" value="3" step="0.1"> cm</label>
+    <label>Bottom: <input type="number" id="inpBottom" value="2.5" step="0.1"> cm</label>
+    <label>Right: <input type="number" id="inpRight" value="2.5" step="0.1"> cm</label>
+    <div class="actions">
+      <button class="btn" id="btnCancelMargin">Batal</button>
+      <button class="btn pri" id="btnSaveMargin">Terapkan</button>
+    </div>
+  </div>
+</div>
+
 <section id="lab" class="screen" hidden>
   <div class="titlebar">
     <div class="qa">
@@ -275,14 +298,14 @@ const SALT='labkata-v1-2026';
 function hash(str){let h1=0xdeadbeef,h2=0x41c6ce57;for(let i=0;i<str.length;i++){const c=str.charCodeAt(i);h1=Math.imul(h1^c,2654435761);h2=Math.imul(h2^c,1597334677);}
  h1=Math.imul(h1^(h1>>>16),2246822507)^Math.imul(h2^(h2>>>13),3266489909);h2=Math.imul(h2^(h2>>>16),2246822507)^Math.imul(h1^(h1>>>13),3266489909);
  return (4294967296*(2097151&h2)+(h1>>>0)).toString(36);}
-const KEY='labkata.v6';
+const KEY='labkata.v9';
 
 // PENGATURAN KODE AKSES
 const CODES = {
   'SESI2': ['m4', 'm5', 'm6'],
   'SESI3': ['m7', 'm8'],
   'SESI4': ['m9', 'm10'],
-  'PRAKTIKUM': ['m11', 'm12', 'm13', 'm14', 'm15']
+  'PRAKTIKUM': ['m11']
 };
 const DEFAULT_UNLOCKED = ['m1', 'm2', 'm3'];
 
@@ -557,7 +580,7 @@ function insImage(){
  inp.onchange=()=>{
   const f=inp.files&&inp.files[0];
   if(f){const rd=new FileReader();rd.onload=()=>{
-    cmd('insertHTML','<img src="'+rd.result+'" style="max-width:80%;display:block;margin:8px auto"><p><br></p>');
+    cmd('insertHTML','<img src="'+rd.result+'" class="wrap-square" style="max-width:80%;display:block;margin:8px auto"><p><br></p>');
   };rd.readAsDataURL(f);}
   inp.remove();
  };
@@ -641,18 +664,29 @@ $('.qa').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)r
  canvas.addEventListener('touchend',()=>{d0=0;});
 })();
 
-/* Kustom Margin (Alert Simulation) */
+/* Kustom Margin via Modal */
 function showCustomMargin(){
- let t = prompt("Masukkan Margin Atas (cm):", "3");
- let l = prompt("Masukkan Margin Kiri (cm):", "3");
- let b = prompt("Masukkan Margin Bawah (cm):", "2.5");
- let r = prompt("Masukkan Margin Kanan (cm):", "2.5");
- if(t&&l&&b&&r){
-   P.customMargins = [parseFloat(t), parseFloat(r), parseFloat(b), parseFloat(l)]; // Top, Right, Bottom, Left
+ const modal = $('#modalMargin');
+ const inpTop = $('#inpTop'), inpLeft = $('#inpLeft'), inpBottom = $('#inpBottom'), inpRight = $('#inpRight');
+ if(P.customMargins){
+   inpTop.value = P.customMargins[0];
+   inpRight.value = P.customMargins[1];
+   inpBottom.value = P.customMargins[2];
+   inpLeft.value = P.customMargins[3];
+ }
+ modal.classList.add('show');
+ $('#btnCancelMargin').onclick = () => { modal.classList.remove('show'); };
+ $('#btnSaveMargin').onclick = () => {
+   const t = parseFloat(inpTop.value) || 2.54;
+   const r = parseFloat(inpRight.value) || 2.54;
+   const b = parseFloat(inpBottom.value) || 2.54;
+   const l = parseFloat(inpLeft.value) || 2.54;
+   P.customMargins = [t, r, b, l]; 
    P.margin = 'custom';
    applyPage();
+   modal.classList.remove('show');
    toast('Margin kustom berhasil diterapkan.');
- }
+ };
 }
 
 /* ---------- pembantu pemeriksa ---------- */
@@ -683,8 +717,6 @@ const DOC5='<p id="judul">Panduan Pramuka</p>'+
  '<p id="sub2">Pelaksanaan</p><p>Kegiatan dilaksanakan setiap Jumat sore di lapangan sekolah.</p>';
 const DOC6='<p>Dokumen ini berisi catatan rapat panitia yang <span id="pi">perlu diperiksa</span> sebelum dibagikan ke peserta didik.</p>'+
  '<p>Rapat membahas jadwal, anggaran, dan pembagian tugas.</p>';
-
-// DOKUMEN MEDIUM/HARD
 const DOC7='<p id="t1">Bagian Pertama: Pendahuluan</p>'+
  '<p id="p1">Ini adalah paragraf pertama dari dokumen ujian medium. Teks ini perlu diformat agar terlihat profesional dan mudah dibaca.</p>'+
  '<p id="p2">Paragraf kedua berisi rincian teknis. Pastikan Anda membaca instruksi tugas dengan teliti sebelum mengubah format.</p>'+
@@ -698,7 +730,7 @@ const DOC9='<p id="judul">LAPORAN TAHUNAN PERUSAHAAN</p>'+
  '<p id="sub3">Laporan Keuangan</p><p>Pendapatan meningkat 20% dibandingkan tahun lalu.</p>';
 const DOC10='<p>Tulis ulang dokumen ini dari awal, ikuti instruksi soal ujian.</p>';
 
-// DOKUMEN PRAKTIKUM SURAT LAMARAN (MODUL 11-15)
+// DOKUMEN PRAKTIKUM SURAT LAMARAN (GABUNGAN)
 const DOC_SURAT = `
 <p style="text-align:right">Bandung, 20 Oktober 2026</p>
 <p>Hal : Lamaran Pekerjaan<br>Lampiran : 3 Lembar</p>
@@ -717,8 +749,7 @@ const fe=(id)=>$b(id);
 const miss=l=>({l:l+' (bagian dokumen tidak ditemukan)',ok:false});
 
 const MODS=[
- // ... (Modul 1-10 dihilangkan untuk ringkasan, tetap ada di kode) ...
- // Saya tetap menyertakan Modul 1-10 asli di file untuk kesinambungan.
+ // ... (Modul 1-10 tetap sama, tidak saya tampilkan di sini untuk menghemat tempat. Ada di file) ...
  {id:'m1',no:'Module 1',judul:'Mengenal Antarmuka (Easy)',desc:'Menemukan tab, grup, tombol, penggaris, dan status bar.',doc:DOC1,start:{},tasks:[
    {j:'Tab Insert',t:'Buka tab <b>Insert</b>.',ui:['tab-sisipkan'],h:['Baris tab di atas.','Tab kedua dari kiri.']},
    {j:'Tab Layout',t:'Buka tab <b>Layout</b>.',ui:['tab-tataletak'],h:['Baris tab di atas.','Tab keempat dari kiri.']},
@@ -840,66 +871,47 @@ const MODS=[
    {j:'Footer & PDF',t:'Aktifkan <b>Footer</b>, beri <b>Page Number</b>, lalu <b>Export PDF</b>.',c:()=>[{l:'Footer aktif',ok:P.footer},{l:'Ada page number',ok:!!ftr.querySelector('.pgnum')}],h:['Tab Insert > Page Number.','Terakhir, uji tombol Export PDF di tab Review.']}
  ]},
 
- // --- MODUL PRAKTIKUM SURAT LAMARAN (11-15) ---
- {id:'m11',no:'Praktikum 1',judul:'Page Setup',desc:'Pengaturan ukuran halaman A4 dan margin kustom (Custom Margin).',doc:DOC_SURAT,start:{size:'Letter',orient:'portrait',margin:'normal',cols:1,header:false,footer:false},tasks:[
-   {j:'Ukuran Kertas A4',t:'Ubah ukuran kertas dokumen menjadi <b>A4</b>.',c:()=>[{l:'Kertas A4',ok:P.size==='A4'}],h:['Tab Layout, grup Page Setup.','Pilih Size: A4.']},
-   {j:'Margin Custom',t:'Buka dropdown Margins, pilih <b>Custom Margins...</b>',ui:['margin'],h:['Tab Layout.','Pilih Margins: Custom...']},
-   {j:'Margin Atas 3cm',t:'Atur margin Top (Atas) menjadi <b>3 cm</b> pada dialog.',c:()=>[{l:'Top 3cm',ok:P.margin==='custom'&&P.customMargins&&P.customMargins[0]===3}],h:['Masukkan angka 3 pada kotak Top.']},
-   {j:'Margin Kiri 3cm',t:'Atur margin Left (Kiri) menjadi <b>3 cm</b>.',c:()=>[{l:'Left 3cm',ok:P.margin==='custom'&&P.customMargins&&P.customMargins[3]===3}],h:['Masukkan angka 3 pada kotak Left.']},
-   {j:'Margin Bawah 2.5cm',t:'Atur margin Bottom (Bawah) menjadi <b>2,5 cm</b>.',c:()=>[{l:'Bottom 2.5cm',ok:P.margin==='custom'&&P.customMargins&&P.customMargins[2]===2.5}],h:['Masukkan angka 2.5 pada kotak Bottom.']},
-   {j:'Margin Kanan 2.5cm',t:'Atur margin Right (Kanan) menjadi <b>2,5 cm</b>.',c:()=>[{l:'Right 2.5cm',ok:P.margin==='custom'&&P.customMargins&&P.customMargins[1]===2.5}],h:['Masukkan angka 2.5 pada kotak Right.']},
-   {j:'Cek Orientasi',t:'Pastikan orientasi tetap <b>Portrait</b>.',c:()=>[{l:'Portrait',ok:P.orient==='portrait'}],h:['Jangan ubah orientasi.']},
-   {j:'Zoom Out',t:'Perkecil tampilan (Zoom Out) agar seluruh teks terlihat.',ui:['zoomout'],h:['Slider di kanan bawah.']},
-   {j:'Word Count',t:'Periksa jumlah kata pada status bar.',ui:['katakata'],h:['Klik teks Words: di bawah.']},
-   {j:'Simpan',t:'Lakukan simulasi Save dokumen.',ui:['simpan'],h:['Ikon disket kiri atas.']}
- ]},
- {id:'m12',no:'Praktikum 2',judul:'Font & Paragraph',desc:'Konsistensi tipografi, jarak antarbaris, dan perataan teks.',doc:DOC_SURAT,start:{size:'A4',orient:'portrait',margin:'normal',cols:1,header:false,footer:false},tasks:[
-   {j:'Pilih Semua',t:'Blok seluruh teks (Select All).',ui:['pilihsemua'],h:['Tab Home, grup Editing.']},
-   {j:'Font Times New Roman',t:'Ubah seluruh font menjadi <b>Times New Roman</b>.',c:()=>[{l:'Font TNR',ok:allText(body,(x,cs)=>famHas(cs,'Times New Roman'))}],h:['Kotak nama font.','Pilih Times New Roman.']},
-   {j:'Ukuran 12pt',t:'Ubah ukuran font seluruh teks menjadi <b>12</b>.',c:()=>[{l:'Size 12',ok:allText(body,(x,cs)=>Math.abs(ptOf(cs)-12)<0.6)}],h:['Kotak Font Size.','Pilih 12.']},
-   {j:'Spasi 1.15',t:'Atur line spacing seluruh teks menjadi <b>1.15</b>.',c:()=>[{l:'Spasi 1.15',ok:allText(body,(x,cs)=>{const p=x.closest('p');return p?Math.abs(lineRatio(p)-1.15)<0.06:true;})}],h:['Dropdown spasi, pilih 1.15.']},
-   {j:'Spasi Atas 0',t:'Atur spacing Before menjadi <b>0 pt</b>.',c:()=>[{l:'Before 0',ok:$$('p',body).every(p=>{const m=parseFloat(getComputedStyle(p).marginTop);return m===0||m<=3;})}],h:['Dropdown Before, pilih 0.']},
-   {j:'Rata Kiri-Kanan',t:'Buat paragraf isi utama menjadi <b>rata kiri-kanan (Justify)</b>.',c:()=>{const e=fe('isi_surat');return e?[{l:'Justify',ok:getComputedStyle(e).textAlign==='justify'}]:[miss('Isi Surat')];},h:['Ketuk paragraf isi surat.','Klik ikon Justify.']},
-   {j:'Bold Nama',t:'Buat nama pelamar menjadi <b>tebal (bold)</b>.',c:()=>{const e=fe('nama_pelamar');return e?[{l:'Nama Bold',ok:allText(e,(x,cs)=>isBold(cs))}]:[miss('Nama')];},h:['Pilih nama Budi Santoso, klik B.']},
-   {j:'Ubah Kapital',t:'Ubah teks "HRD Manager PT Maju Jaya" menjadi <b>KAPITAL</b>.',c:()=>{const e=Array.from(body.querySelectorAll('p')).find(x=>x.innerText.includes('PT Maju Jaya'));return e?[{l:'HRD Manager PT Maju Jaya',ok:e.innerText.includes('HRD MANAGER PT MAJU JAYA')}]:[miss('PT Maju Jaya')];},h:['Pilih teks, klik tombol Aa.']},
-   {j:'Indentasi',t:'Beri <b>First Line Indent</b> pada paragraf isi surat.',c:()=>{const e=fe('isi_surat');return e?[{l:'Indent',ok:parseFloat(getComputedStyle(e).textIndent)>0}]:[miss('Isi Surat')];},h:['Pilih paragraf, klik tombol Indent.']},
-   {j:'Simpan',t:'Lakukan simulasi Save dokumen.',ui:['simpan'],h:['Ikon disket kiri atas.']}
- ]},
- {id:'m13',no:'Praktikum 3',judul:'Ruler & Tab Stop',desc:'Memasang Tab Stop di mistar untuk merapikan titik dua.',doc:DOC_SURAT,start:{size:'A4',orient:'portrait',margin:'normal',cols:1,header:false,footer:false},tasks:[
-   {j:'Aktifkan Ruler',t:'Aktifkan <b>Ruler</b> (pastikan muncul di atas kertas).',c:()=>[{l:'Ruler Aktif',ok:showRuler}],h:['Tab View > Ruler.']},
-   {j:'Hapus Spasi Manual',t:'Hapus spasi berlebih pada baris "Hal" dan "Lampiran" agar hanya ada 1 spasi.',c:()=>{const e=Array.from(body.querySelectorAll('p')).find(x=>x.innerText.includes('Hal :'));return e?[{l:'Spasi rapi',ok:!e.innerHTML.includes('&nbsp;&nbsp;')}]:[miss('Hal')];},h:['Cukup pastikan formatnya "Hal : Lamaran".']},
-   {j:'Sisipkan Tab',t:'Letakkan kursor sebelum tanda ":" di baris <b>Hal</b>, lalu tekan tombol Tab di keyboard.',c:()=>[{l:'Ada karakter Tab',ok:body.innerHTML.includes('Hal\t:')||body.innerHTML.includes('Hal &nbsp;&nbsp;&nbsp;&nbsp;:')}],h:['Gunakan tombol Tab di keyboard.']},
-   {j:'Tab Stop Mistar',t:'Gunakan fitur <b>Tab Stop</b> (klik di mistar angka 3cm).',ui:['tabstop'],h:['Klik area mistar di atas.']},
-   {j:'Tab Lampiran',t:'Tekan Tab sebelum tanda ":" pada baris <b>Lampiran</b>.',c:()=>[{l:'Tab Lampiran',ok:body.innerHTML.includes('Lampiran\t:')||body.innerHTML.includes('Lampiran &nbsp;&nbsp;&nbsp;&nbsp;:')}],h:['Ketuk sebelum titik dua, tekan Tab.']},
-   {j:'Tab Perihal',t:'Tekan Tab sebelum tanda ":" pada baris <b>Perihal</b>.',c:()=>[{l:'Tab Perihal',ok:body.innerHTML.includes('Perihal\t:')}],h:['Lakukan hal yang sama.']},
-   {j:'Cek Mistar',t:'Temukan skala mistar angka 1, 2, 3.',ui:['penggaris'],h:['Ketuk mistar.']},
-   {j:'Perkecil Zoom',t:'Perkecil tampilan agar tab stop terlihat.',ui:['zoomout'],h:['Geser slider zoom.']},
-   {j:'Simpan',t:'Lakukan simulasi Save.',ui:['simpan'],h:['Ikon disket.']},
-   {j:'Jumlah Kata',t:'Periksa Word Count.',ui:['katakata'],h:['Klik angka kata.']}
- ]},
- {id:'m14',no:'Praktikum 4',judul:'Pictures & Wrap Text',desc:'Menyisipkan tanda tangan digital dan mengatur perataan objek.',doc:DOC_SURAT,start:{size:'A4',orient:'portrait',margin:'normal',cols:1,header:false,footer:false},tasks:[
-   {j:'Kursor di Ttd',t:'Letakkan kursor di bawah teks "Hormat saya,".',c:()=>[{l:'Kursor Siap',ok:true}],h:['Ketuk area kosong.']},
-   {j:'Sisipkan Gambar',t:'Sisipkan <b>gambar</b> tanda tangan.',c:()=>[{l:'Ada Gambar',ok:!!body.querySelector('img')}],h:['Tab Insert > Pictures.']},
-   {j:'Wrap Text (Square)',t:'Ubah Wrap Text gambar menjadi <b>Square</b>.',c:()=>{const i=body.querySelector('img');return i?[{l:'Square',ok:i.classList.contains('wrap-square')}]:[miss('Gambar')];},h:['Pilih gambar, klik Wrap Text.']},
-   {j:'Wrap In Front',t:'Ubah Wrap Text gambar menjadi <b>In Front of Text</b>.',c:()=>{const i=body.querySelector('img');return i?[{l:'In Front',ok:i.classList.contains('wrap-front')}]:[miss('Gambar')];},h:['Pilih gambar, ubah wrap.']},
-   {j:'Wrap Behind',t:'Ubah Wrap Text gambar menjadi <b>Behind Text</b>.',c:()=>{const i=body.querySelector('img');return i?[{l:'Behind',ok:i.classList.contains('wrap-behind')}]:[miss('Gambar')];},h:['Pilih gambar, ubah wrap.']},
-   {j:'Kecilkan Gambar',t:'Ubah ukuran gambar (Width) menjadi <b>150px</b>.',c:()=>{const i=body.querySelector('img');return i?[{l:'Width 150px',ok:getComputedStyle(i).width==='150px'}]:[miss('Gambar')];},h:['Atur lebar gambar.']},
-   {j:'Center Gambar',t:'Buat gambar menjadi <b>rata tengah</b>.',c:()=>{const i=body.querySelector('img');return i?[{l:'Gambar Center',ok:i.style.margin==='0px auto'}]:[miss('Gambar')];},h:['Posisikan di tengah.']},
-   {j:'Tebalkan Nama',t:'Tebalkan nama <b>Budi Santoso</b>.',c:()=>{const e=fe('nama_pelamar');return e?[{l:'Nama Bold',ok:isBold(getComputedStyle(e))}]:[miss('Nama')];},h:['Gunakan tombol B.']},
-   {j:'Tambah Baris',t:'Tekan Enter untuk memberi jarak antara gambar dan nama.',c:()=>[{l:'Jarak aman',ok:true}],h:['Pastikan tidak bertumpuk.']},
-   {j:'Simpan',t:'Lakukan simulasi Save.',ui:['simpan'],h:['Ikon disket.']}
- ]},
- {id:'m15',no:'Praktikum 5',judul:'Output Validation',desc:'Pemeriksaan akhir, Zoom Out, dan Ekspor ke PDF.',doc:DOC_SURAT,start:{size:'A4',orient:'portrait',margin:'custom',customMargins:[3,2.5,2.5,3],cols:1,header:false,footer:false},tasks:[
-   {j:'Pemeriksaan Visual',t:'Perkecil (Zoom Out) tampilan hingga seluruh surat terlihat dalam 1 halaman.',ui:['zoomout'],h:['Geser slider ke kiri.']},
-   {j:'Pastikan 1 Halaman',t:'Cek status bar, pastikan <b>Page 1 of 1</b>.',ui:['halaman'],h:['Lihat pojok kiri bawah.']},
-   {j:'Simpan DOCX',t:'Simpan dokumen dengan nama <b>Praktikum_Surat_Lamaran.docx</b>.',ui:['simpan'],h:['Gunakan ikon disket.']},
-   {j:'Buka Tab Review',t:'Pindah ke tab <b>Review</b> untuk ekspor.',ui:['tab-tinjau'],h:['Tab ke-7 di atas.']},
-   {j:'Klik Ekspor PDF',t:'Klik tombol <b>Export PDF</b>.',ui:['eksporpdf'],h:['Grup Export.']},
-   {j:'Pilih Save as PDF',t:'Pada dialog, pilih opsi <b>Save as PDF</b>.',ui:['eksporpdf'],h:['Simulasi cetak browser.']},
-   {j:'Cek Hasil Cetak',t:'Pastikan pratinjau cetak hanya menampilkan surat tanpa garis bantu.',ui:['eksporpdf'],h:['Lihat preview.']},
-   {j:'Periksa Margin',t:'Pastikan margin atas dan kiri lebih lebar dari margin bawah dan kanan.',c:()=>[{l:'Margin Kustom',ok:P.margin==='custom'&&P.customMargins[0]===3}],h:['Cek penggaris.']},
-   {j:'Font TNR',t:'Pastikan seluruh teks menggunakan font <b>Times New Roman</b>.',c:()=>[{l:'Font TNR',ok:allText(body,(x,cs)=>famHas(cs,'Times New Roman'))}],h:['Cek font.']},
-   {j:'Ulangi Praktikum',t:'Modul selesai! Ulangi jika perlu.',ui:['simpan'],h:['Selesai.']}
+ // --- MODUL PRAKTIKUM SURAT LAMARAN (GABUNGAN) ---
+ {id:'m11',no:'Praktikum Akhir',judul:'Surat Lamaran Kerja (Ujian Praktik)',desc:'Ujian Praktik Komprehensif: Margin, Font, Tab Stop, Gambar, dan PDF.',doc:DOC_SURAT,start:{size:'Letter',orient:'portrait',margin:'normal',cols:1,header:false,footer:false},tasks:[
+   // BAGIAN 1: PAGE SETUP
+   {j:'1. Ukuran Kertas A4',t:'Ubah ukuran kertas dokumen menjadi <b>A4</b>.',c:()=>[{l:'Kertas A4',ok:P.size==='A4'}],h:['Tab Layout, grup Page Setup.','Pilih Size: A4.']},
+   {j:'2. Margin Custom',t:'Buka dropdown Margins, pilih <b>Custom Margins...</b>',ui:['margin'],h:['Tab Layout.','Pilih Margins: Custom...']},
+   {j:'3. Margin Atas 3cm',t:'Atur margin Top (Atas) menjadi <b>3 cm</b> pada dialog.',c:()=>[{l:'Top 3cm',ok:P.margin==='custom'&&P.customMargins&&P.customMargins[0]===3}],h:['Masukkan angka 3 pada kotak Top.']},
+   {j:'4. Margin Kiri 3cm',t:'Atur margin Left (Kiri) menjadi <b>3 cm</b>.',c:()=>[{l:'Left 3cm',ok:P.margin==='custom'&&P.customMargins&&P.customMargins[3]===3}],h:['Masukkan angka 3 pada kotak Left.']},
+   {j:'5. Margin Bawah 2.5cm',t:'Atur margin Bottom (Bawah) menjadi <b>2,5 cm</b>.',c:()=>[{l:'Bottom 2.5cm',ok:P.margin==='custom'&&P.customMargins&&P.customMargins[2]===2.5}],h:['Masukkan angka 2.5 pada kotak Bottom.']},
+   {j:'6. Margin Kanan 2.5cm',t:'Atur margin Right (Kanan) menjadi <b>2,5 cm</b>.',c:()=>[{l:'Right 2.5cm',ok:P.margin==='custom'&&P.customMargins&&P.customMargins[1]===2.5}],h:['Masukkan angka 2.5 pada kotak Right.']},
+   
+   // BAGIAN 2: FONT & PARAGRAPH
+   {j:'7. Pilih Semua',t:'Blok seluruh teks (Select All).',ui:['pilihsemua'],h:['Tab Home, grup Editing.']},
+   {j:'8. Font Times New Roman',t:'Ubah seluruh font menjadi <b>Times New Roman</b>.',c:()=>[{l:'Font TNR',ok:allText(body,(x,cs)=>famHas(cs,'Times New Roman'))}],h:['Kotak nama font.','Pilih Times New Roman.']},
+   {j:'9. Ukuran 12pt',t:'Ubah ukuran font seluruh teks menjadi <b>12</b>.',c:()=>[{l:'Size 12',ok:allText(body,(x,cs)=>Math.abs(ptOf(cs)-12)<0.6)}],h:['Kotak Font Size.','Pilih 12.']},
+   {j:'10. Spasi 1.15',t:'Atur line spacing seluruh teks menjadi <b>1.15</b>.',c:()=>[{l:'Spasi 1.15',ok:allText(body,(x,cs)=>{const p=x.closest('p');return p?Math.abs(lineRatio(p)-1.15)<0.06:true;})}],h:['Dropdown spasi, pilih 1.15.']},
+   {j:'11. Spasi Atas 0',t:'Atur spacing Before menjadi <b>0 pt</b>.',c:()=>[{l:'Before 0',ok:$$('p',body).every(p=>{const m=parseFloat(getComputedStyle(p).marginTop);return m===0||m<=3;})}],h:['Dropdown Before, pilih 0.']},
+   {j:'12. Rata Kiri-Kanan',t:'Buat paragraf isi utama menjadi <b>rata kiri-kanan (Justify)</b>.',c:()=>{const e=fe('isi_surat');return e?[{l:'Justify',ok:getComputedStyle(e).textAlign==='justify'}]:[miss('Isi Surat')];},h:['Ketuk paragraf isi surat.','Klik ikon Justify.']},
+   {j:'13. Indentasi',t:'Beri <b>First Line Indent</b> pada paragraf isi surat.',c:()=>{const e=fe('isi_surat');return e?[{l:'Indent',ok:parseFloat(getComputedStyle(e).textIndent)>0}]:[miss('Isi Surat')];},h:['Pilih paragraf, klik tombol Indent.']},
+   {j:'14. Bold Nama',t:'Buat nama pelamar menjadi <b>tebal (bold)</b>.',c:()=>{const e=fe('nama_pelamar');return e?[{l:'Nama Bold',ok:allText(e,(x,cs)=>isBold(cs))}]:[miss('Nama')];},h:['Pilih nama Budi Santoso, klik B.']},
+
+   // BAGIAN 3: RULER & TAB STOP
+   {j:'15. Aktifkan Ruler',t:'Aktifkan <b>Ruler</b> (pastikan muncul di atas kertas).',c:()=>[{l:'Ruler Aktif',ok:showRuler}],h:['Tab View > Ruler.']},
+   {j:'16. Hapus Spasi Manual',t:'Hapus spasi berlebih pada baris "Hal" dan "Lampiran" agar hanya ada 1 spasi.',c:()=>{const e=Array.from(body.querySelectorAll('p')).find(x=>x.innerText.includes('Hal :'));return e?[{l:'Spasi rapi',ok:!e.innerHTML.includes('&nbsp;&nbsp;')}]:[miss('Hal')];},h:['Cukup pastikan formatnya "Hal : Lamaran".']},
+   {j:'17. Sisipkan Tab',t:'Letakkan kursor sebelum tanda ":" di baris <b>Hal</b>, lalu tekan tombol Tab di keyboard.',c:()=>[{l:'Ada karakter Tab',ok:body.innerHTML.includes('Hal\t:')||body.innerHTML.includes('Hal &nbsp;&nbsp;&nbsp;&nbsp;:')}],h:['Gunakan tombol Tab di keyboard.']},
+   {j:'18. Tab Stop Mistar',t:'Gunakan fitur <b>Tab Stop</b> (klik di mistar angka 3cm).',ui:['tabstop'],h:['Klik area mistar di atas.']},
+   {j:'19. Tab Lampiran',t:'Tekan Tab sebelum tanda ":" pada baris <b>Lampiran</b>.',c:()=>[{l:'Tab Lampiran',ok:body.innerHTML.includes('Lampiran\t:')||body.innerHTML.includes('Lampiran &nbsp;&nbsp;&nbsp;&nbsp;:')}],h:['Ketuk sebelum titik dua, tekan Tab.']},
+   
+   // BAGIAN 4: PICTURES & WRAP TEXT
+   {j:'20. Sisipkan Gambar',t:'Sisipkan <b>gambar</b> tanda tangan di bawah teks "Hormat saya,".',c:()=>[{l:'Ada Gambar',ok:!!body.querySelector('img')}],h:['Tab Insert > Pictures.']},
+   {j:'21. Wrap Text (Square)',t:'Ubah Wrap Text gambar menjadi <b>Square</b>.',c:()=>{const i=body.querySelector('img');return i?[{l:'Square',ok:i.classList.contains('wrap-square')}]:[miss('Gambar')];},h:['Pilih gambar, klik Wrap Text.']},
+   {j:'22. Wrap In Front',t:'Ubah Wrap Text gambar menjadi <b>In Front of Text</b>.',c:()=>{const i=body.querySelector('img');return i?[{l:'In Front',ok:i.classList.contains('wrap-front')}]:[miss('Gambar')];},h:['Pilih gambar, ubah wrap.']},
+   {j:'23. Wrap Behind',t:'Ubah Wrap Text gambar menjadi <b>Behind Text</b>.',c:()=>{const i=body.querySelector('img');return i?[{l:'Behind',ok:i.classList.contains('wrap-behind')}]:[miss('Gambar')];},h:['Pilih gambar, ubah wrap.']},
+   {j:'24. Kecilkan Gambar',t:'Ubah ukuran gambar (Width) menjadi <b>150px</b>.',c:()=>{const i=body.querySelector('img');return i?[{l:'Width 150px',ok:getComputedStyle(i).width==='150px'}]:[miss('Gambar')];},h:['Atur lebar gambar.']},
+   
+   // BAGIAN 5: OUTPUT VALIDATION
+   {j:'25. Pemeriksaan Visual',t:'Perkecil (Zoom Out) tampilan hingga seluruh surat terlihat dalam 1 halaman.',ui:['zoomout'],h:['Geser slider ke kiri.']},
+   {j:'26. Pastikan 1 Halaman',t:'Cek status bar, pastikan <b>Page 1 of 1</b>.',ui:['halaman'],h:['Lihat pojok kiri bawah.']},
+   {j:'27. Simpan DOCX',t:'Simpan dokumen dengan nama <b>Praktikum_Surat_Lamaran.docx</b>.',ui:['simpan'],h:['Gunakan ikon disket.']},
+   {j:'28. Buka Tab Review',t:'Pindah ke tab <b>Review</b> untuk ekspor.',ui:['tab-tinjau'],h:['Tab ke-7 di atas.']},
+   {j:'29. Klik Ekspor PDF',t:'Klik tombol <b>Export PDF</b>.',ui:['eksporpdf'],h:['Grup Export.']},
+   {j:'30. Pilih Save as PDF',t:'Pada dialog, pilih opsi <b>Save as PDF</b>.',ui:['eksporpdf'],h:['Simulasi cetak browser.']}
  ]}
 ];
 
